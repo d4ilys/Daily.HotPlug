@@ -18,8 +18,14 @@ namespace HotPlug
         private void HotPlugForm_Load(object sender, EventArgs e)
         {
             var loadDll = LoadDll.CreateInstance(Path.Combine(AppContext.BaseDirectory, "Plugs", "Plug01.dll"));
-            dlls.Add(loadDll.AssemblyInfo.GetName().Name, loadDll);
+            DllDictionaryAdd(loadDll);
             DataViewInit();
+        }
+
+        private void DllDictionaryAdd(LoadDll dll)
+        {
+            var key = $"{dll.AssemblyInfo.GetName().Name}|{dll.AssemblyInfo.GetName().Version}";
+            dlls.Add(key, dll);
         }
 
         private void DataViewInit()
@@ -27,21 +33,23 @@ namespace HotPlug
             var dllInfos = dlls.Select(dll => new
             {
                 Id = id++,
-                Name = dll.Key,
-                Value = dll.Value.AssemblyInfo.GetName().Version.ToString(),
+                Key = $"{dll.Value.AssemblyInfo.GetName().Name}|{dll.Value.AssemblyInfo.GetName().Version}",
+                Name = dll.Value.AssemblyInfo.GetName().Name,
+                Version = dll.Value.AssemblyInfo.GetName().Version.ToString(),
                 Status = Enum.GetName(typeof(LoadedState), dll.Value.LoadedState)
             }).ToList();
             dataGridView1.DataSource = dllInfos;
             dataGridView1.Columns[0].Visible = false;
+            dataGridView1.Columns["Key"].Visible = false;
         }
 
-        private string GetDataViewSelectName(string col = "Name")
+        private string GetDataViewSelectName(string col = "Key")
         {
             int a = dataGridView1.CurrentRow.Index;
             var dataGridViewRow = dataGridView1.Rows[a];
             var dataGridViewCell = dataGridViewRow.Cells[col];
-            var value = dataGridViewCell.Value.ToString();
-            return value;
+            var key = dataGridViewCell.Value.ToString();
+            return key;
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -72,15 +80,16 @@ namespace HotPlug
                 return;
             }
 
-            if (dlls.Any(pair => pair.Key == Path.GetFileNameWithoutExtension(openFileDialog1.SafeFileName)))
-            {
-                MessageBox.Show("已经存在这个插件，请移除后添加..");
-                return;
-            }
-
             var loadDll = LoadDll.CreateInstance(localFilePath);
-
-            dlls.Add(loadDll.AssemblyInfo.GetName().Name, loadDll);
+            try
+            {
+                DllDictionaryAdd(loadDll);
+            }
+            catch
+            {
+                MessageBox.Show("已经存在该版本的插件.");
+                loadDll.UnLoad();
+            }
             DataViewInit();
         }
 
@@ -100,6 +109,10 @@ namespace HotPlug
                 dlls[value].UnLoad();
             dlls.Remove(value);
             DataViewInit();
+        }
+
+        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
         }
     }
 }

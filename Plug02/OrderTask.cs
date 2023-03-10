@@ -8,7 +8,7 @@ namespace Plug02
     {
         public void Run()
         {
-            MessageBox.Show("我是订单插件，我升级为1.0.0.4了");
+            MessageBox.Show("我是订单插件，我是1.0.0.6版本");
         }
     }
 }

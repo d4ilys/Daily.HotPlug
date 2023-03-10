@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Diagnostics;
+using System.Reflection;
 using System.Runtime.Loader;
 using HotPlugBase;
 
@@ -56,6 +57,10 @@ public class LoadDll
         {
             _resolver = new AssemblyDependencyResolver(_path);
             _context = new AssemblyLoadContext(Guid.NewGuid().ToString("N"), true);
+            _context.Unloading += context =>
+            {
+                Debug.WriteLine("已经被卸载.");
+            };
             _context.Resolving += (context, name) =>
             {
                 Console.WriteLine($"加载{name.Name}");
@@ -145,10 +150,11 @@ public class LoadDll
             //将线程任务取消
             cancelTokenSource.Cancel();
             _context.Unload();
+            LoadedState = LoadedState.Unload;
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
+            LoadedState = LoadedState.Failed;
         }
         finally
         {
@@ -157,7 +163,6 @@ public class LoadDll
             //GC.Collect();
             //GC.WaitForPendingFinalizers();
         }
-        LoadedState = LoadedState.Unload;
         return true;
     }
 

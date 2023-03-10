@@ -34,6 +34,10 @@
             button3 = new Button();
             openFileDialog1 = new OpenFileDialog();
             button1 = new Button();
+            Id = new DataGridViewTextBoxColumn();
+            Name = new DataGridViewTextBoxColumn();
+            Version = new DataGridViewTextBoxColumn();
+            Status = new DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             SuspendLayout();
             // 
@@ -50,11 +54,13 @@
             // dataGridView1
             // 
             dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridView1.Columns.AddRange(new DataGridViewColumn[] { Id, Name, Version, Status });
             dataGridView1.Location = new Point(3, 16);
             dataGridView1.Name = "dataGridView1";
             dataGridView1.RowTemplate.Height = 25;
             dataGridView1.Size = new Size(344, 165);
             dataGridView1.TabIndex = 1;
+            dataGridView1.CellContentClick += dataGridView1_CellContentClick;
             // 
             // button2
             // 
@@ -90,6 +96,30 @@
             button1.UseVisualStyleBackColor = true;
             button1.Click += button1_Click_1;
             // 
+            // Id
+            // 
+            Id.DataPropertyName = "Id";
+            Id.HeaderText = "Id";
+            Id.Name = "Id";
+            // 
+            // Name
+            // 
+            Name.DataPropertyName = "Name";
+            Name.HeaderText = "插件";
+            Name.Name = "Name";
+            // 
+            // Version
+            // 
+            Version.DataPropertyName = "Version";
+            Version.HeaderText = "版本";
+            Version.Name = "Version";
+            // 
+            // Status
+            // 
+            Status.DataPropertyName = "Status";
+            Status.HeaderText = "状态";
+            Status.Name = "Status";
+            // 
             // HotPlugForm
             // 
             AutoScaleDimensions = new SizeF(7F, 17F);
@@ -100,7 +130,7 @@
             Controls.Add(button2);
             Controls.Add(dataGridView1);
             Controls.Add(RunPlug);
-            Name = "HotPlugForm";
+            Name = new DataGridViewTextBoxColumn();
             StartPosition = FormStartPosition.CenterScreen;
             Text = "热插拔";
             Load += HotPlugForm_Load;
@@ -116,5 +146,9 @@
         private Button button3;
         private OpenFileDialog openFileDialog1;
         private Button button1;
+        private DataGridViewTextBoxColumn Id;
+        private DataGridViewTextBoxColumn Name;
+        private DataGridViewTextBoxColumn Version;
+        private DataGridViewTextBoxColumn Status;
     }
 }
