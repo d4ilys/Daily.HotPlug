@@ -1,5 +1,11 @@
 # Daily.HotPlug
-.NET 6.0 实现热插拔 - AssemblyLoadContext
+.NET 6.0 实现热插拔 
+
+在.NET Frameword 时代通过AppDomain来实现程序集动态加载与卸载
+
+在.NET Core中则是通过AssemblyLoadContext来实现程序集的卸载
+
+应用场景：插件化开发时的热插拔、不重启主程序更新其功能
 
 **程序会默认加载第一个插件**
 
